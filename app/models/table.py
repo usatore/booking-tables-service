@@ -10,6 +10,6 @@ class Table(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String, nullable=False)
     seats = Column(Integer, nullable=False)
-    location = Column(String, nullable=False)
+    location = Column(String, nullable=True)
 
     reservations = relationship("Reservation", back_populates="table", cascade="all, delete-orphan")
