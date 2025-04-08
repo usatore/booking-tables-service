@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from app.dao.table import TableDAO
 
 router = APIRouter(
     prefix='/tables',
@@ -7,7 +8,7 @@ router = APIRouter(
 
 @router.get('')
 async def get_all_tables():
-    pass
+    return await TableDAO.find_all()
 
 @router.post('')
 async def create_new_table():

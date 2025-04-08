@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from app.dao.reservation import ReservationDAO
 
 router = APIRouter(
     prefix='/reservations',
@@ -7,7 +8,7 @@ router = APIRouter(
 
 @router.get('')
 async def get_all_reservations():
-    pass
+    return await ReservationDAO.find_all()
 
 @router.post('')
 async def create_new_reservation():
