@@ -34,7 +34,7 @@ class ReservationDAO(BaseDAO):
                 if reservation_time < res_end and reservation_end > res.reservation_time:
                     raise HTTPException(
                         status_code=status.HTTP_409_CONFLICT,
-                        detail=f"Table {table_id} already booked from {res.reservation_time} to {res_end} (reservation id: {res.id})"
+                        detail=f"Table {table_id} already booked from {res.reservation_time} to {res_end})"
                     )
 
             # Если всё ок — добавляем
