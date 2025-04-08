@@ -16,4 +16,4 @@ async def create_new_reservation():
 
 @router.delete('/{id}')
 async def delete_reservation(id: int):
-    pass
+    await ReservationDAO.delete(id=id)

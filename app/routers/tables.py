@@ -16,4 +16,4 @@ async def create_new_table():
 
 @router.delete('/{id}')
 async def delete_table(id: int):
-    pass
+    await TableDAO.delete(id=id)
