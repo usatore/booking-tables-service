@@ -1,12 +1,11 @@
-from sqlalchemy import select, and_
-from fastapi import HTTPException, status
+from sqlalchemy import select
 from datetime import timedelta
 from app.database import async_session_maker
 from datetime import datetime
 from app.models.reservation import Reservation
 from app.models.table import Table
 from app.dao.base import BaseDAO
-from sqlalchemy.orm import joinedload
+from app.exceptions import TableNotFound, TableAlreadyReserved
 
 
 class ReservationDAO(BaseDAO):
@@ -28,9 +27,7 @@ class ReservationDAO(BaseDAO):
             table = result.scalar_one_or_none()
 
             if not table:
-                raise HTTPException(
-                    status_code=404, detail=f"Table with id {table_id} not found"
-                )
+                raise TableNotFound
 
             reservation_end = reservation_time + timedelta(minutes=duration_minutes)
 
@@ -46,10 +43,7 @@ class ReservationDAO(BaseDAO):
                     reservation_time < res_end
                     and reservation_end > res.reservation_time
                 ):
-                    raise HTTPException(
-                        status_code=status.HTTP_409_CONFLICT,
-                        detail=f"Table {table_id} already booked from {res.reservation_time} to {res_end})",
-                    )
+                    raise TableAlreadyReserved
 
             # Если всё ок — добавляем
             new_reservation = cls.model(

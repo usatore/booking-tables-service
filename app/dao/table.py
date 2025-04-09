@@ -2,7 +2,7 @@ from app.dao.base import BaseDAO
 from sqlalchemy import select
 from app.models.table import Table
 from app.database import async_session_maker
-from fastapi import HTTPException
+from app.exceptions import TableAlreadyExist
 
 class TableDAO(BaseDAO):
     model = Table
@@ -19,15 +19,12 @@ class TableDAO(BaseDAO):
             existing_table = existing_result.scalar_one_or_none()
 
             if existing_table:
-                raise HTTPException(
-                    status_code=409,
-                    detail=f"Table with name '{name}' already exists."
-                )
+                raise TableAlreadyExist
 
             new_table = cls.model(name=name, seats=seats, location=location)
             session.add(new_table)
             await session.commit()
-            #await session.refresh(new_table)
+            await session.refresh(new_table)
             return new_table
 
 
