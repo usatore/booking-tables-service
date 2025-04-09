@@ -7,7 +7,7 @@ router = APIRouter(
     tags=['Брони']
 )
 
-@router.get('/', response_model=list[SReservationRead], status_code=status.HTTP_200_OK)
+@router.get('/', status_code=status.HTTP_200_OK)
 async def get_all_reservations():
     reservations = await ReservationDAO.find_all()
     if not reservations:
