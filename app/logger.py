@@ -5,6 +5,8 @@ from app.config import settings
 
 logger = logging.getLogger()
 logHandler = logging.StreamHandler()
+
+
 class CustomJsonFormatter(JsonFormatter):
     def add_fields(self, log_record, record, message_dict):
         super(CustomJsonFormatter, self).add_fields(log_record, record, message_dict)
@@ -18,7 +20,8 @@ class CustomJsonFormatter(JsonFormatter):
 
 
 formatter = CustomJsonFormatter(
-    "%(timestamp)s %(level)s %(message)s %(module)s %(funcName)s"
+    "%(timestamp)s %(level)s %(message)s %(module)s %(funcName)s",
+    json_ensure_ascii=False
 )
 
 logHandler.setFormatter(formatter)

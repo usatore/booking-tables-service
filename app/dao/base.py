@@ -12,7 +12,6 @@ class BaseDAO:
             result = await session.execute(query)
             return result.scalars().all()
 
-
     @classmethod
     async def delete(cls, id: int):
         async with async_session_maker() as session:
@@ -27,11 +26,11 @@ class BaseDAO:
             await session.commit()
             return {"message": f"Deleted {cls.model.__name__} with id {id}"}
 
-    '''
+    """
     @classmethod
     async def delete(cls, **filter_by):
         async with async_session_maker() as session:
             query = delete(cls.model).filter_by(**filter_by)
             await session.execute(query)
             await session.commit()
-    '''
+    """

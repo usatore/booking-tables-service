@@ -1,7 +1,7 @@
-
 from datetime import datetime
 from pydantic import BaseModel
 from app.schemas.table import STable
+
 
 class SReservation(BaseModel):
     customer_name: str
@@ -11,8 +11,10 @@ class SReservation(BaseModel):
     class Config:
         from_attributes = True
 
+
 class SReservationCreate(SReservation):
     table_id: int
+
 
 class SReservationRead(SReservation):
     id: int

@@ -13,4 +13,4 @@ class Reservation(Base):
     reservation_time = Column(DateTime(timezone=True), nullable=False)
     duration_minutes = Column(Integer, nullable=False)
 
-    table = relationship("Table", back_populates="reservations")
+    table = relationship("Table", back_populates="reservations", lazy="joined")

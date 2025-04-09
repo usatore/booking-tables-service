@@ -12,6 +12,7 @@ async def lifespan(app: FastAPI):
     yield
     logger.info("Приложение завершает работу...")
 
+
 app = FastAPI(lifespan=lifespan)
 
 logger.info("Подключаем маршруты для таблиц и бронирований.")
