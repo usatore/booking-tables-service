@@ -14,6 +14,6 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-logger.info("Подключаем маршруты для таблиц и бронирований.")
+logger.info("Подключаем роутеры")
 app.include_router(router_tables)
 app.include_router(router_reservations)

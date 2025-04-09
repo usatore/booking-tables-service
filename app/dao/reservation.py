@@ -6,20 +6,23 @@ from app.models.reservation import Reservation
 from app.models.table import Table
 from app.dao.base import BaseDAO
 from app.exceptions import TableNotFound, TableAlreadyReserved
+from app.logger import logger
 
 
 class ReservationDAO(BaseDAO):
     model = Reservation
 
-
     @classmethod
     async def add(
-        cls,
-        customer_name: str,
-        table_id: int,
-        reservation_time: datetime,
-        duration_minutes: int,
+            cls,
+            customer_name: str,
+            table_id: int,
+            reservation_time: datetime,
+            duration_minutes: int,
     ):
+        logger.info(
+            f"Попытка добавить новую бронь для клиента '{customer_name}', столик {table_id}, время {reservation_time}.")
+
         async with async_session_maker() as session:
             # Проверка, что столик существует
             table_query = select(Table).where(Table.id == table_id)
@@ -27,7 +30,9 @@ class ReservationDAO(BaseDAO):
             table = result.scalar_one_or_none()
 
             if not table:
+                logger.error(f"Столик с ID {table_id} не найден.")
                 raise TableNotFound
+            logger.info(f"Столик с ID {table_id} найден, продолжение обработки брони.")
 
             reservation_end = reservation_time + timedelta(minutes=duration_minutes)
 
@@ -40,9 +45,10 @@ class ReservationDAO(BaseDAO):
             for res in existing_reservations:
                 res_end = res.reservation_time + timedelta(minutes=res.duration_minutes)
                 if (
-                    reservation_time < res_end
-                    and reservation_end > res.reservation_time
+                        reservation_time < res_end
+                        and reservation_end > res.reservation_time
                 ):
+                    logger.error(f"Столик {table_id} уже забронирован на время с {res.reservation_time} по {res_end}.")
                     raise TableAlreadyReserved
 
             # Если всё ок — добавляем
@@ -56,4 +62,5 @@ class ReservationDAO(BaseDAO):
             session.add(new_reservation)
             await session.commit()
             await session.refresh(new_reservation)
+            logger.info(f"Бронь для клиента '{customer_name}' на столик {table_id} успешно создана.")
             return new_reservation
