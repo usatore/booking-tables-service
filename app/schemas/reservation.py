@@ -1,6 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel
-from app.schemas.table import STable
+from app.schemas.table import STableRead
 
 
 class SReservation(BaseModel):
@@ -18,4 +18,4 @@ class SReservationCreate(SReservation):
 
 class SReservationRead(SReservation):
     id: int
-    table: STable
+    table: STableRead

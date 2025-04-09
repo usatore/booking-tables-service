@@ -3,10 +3,18 @@ from typing import Optional
 
 
 class STable(BaseModel):
-    id: int
     name: str
     seats: int
-    location: Optional[str] = None
+    location: Optional[str] = "Не указано"
 
     class Config:
         from_attributes = True
+
+
+class STableCreate(STable):
+    pass
+
+class STableRead(STable):
+    id: int
+
+

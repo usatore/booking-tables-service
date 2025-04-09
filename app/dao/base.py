@@ -1,5 +1,7 @@
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, insert
 from app.database import async_session_maker
+from sqlalchemy.exc import SQLAlchemyError
+from app.logger import logger
 
 
 class BaseDAO:
