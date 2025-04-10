@@ -20,7 +20,7 @@ class CustomJsonFormatter(JsonFormatter):
 
 
 formatter = CustomJsonFormatter(
-    "%(timestamp)s %(level)s %(message)s %(module)s %(funcName)s",
+    "%(timestamp)s \n %(level)s \n %(message)s \n %(module)s \n %(funcName)s",
     json_ensure_ascii=False
 )
 

@@ -5,7 +5,7 @@ from datetime import datetime
 from app.models.reservation import Reservation
 from app.models.table import Table
 from app.dao.base import BaseDAO
-from app.exceptions import TableNotFound, TableAlreadyReserved
+from app.exceptions import TableNotFound, TableAlreadyReserved, DurationNotPositive
 from app.logger import logger
 
 
@@ -22,6 +22,10 @@ class ReservationDAO(BaseDAO):
     ):
         logger.info(
             f"Попытка добавить новую бронь для клиента '{customer_name}', столик {table_id}, время {reservation_time}.")
+
+        if duration_minutes <= 0:
+            logger.error(f"Некорректная длительность брони: {duration_minutes} минут.")
+            raise DurationNotPositive
 
         async with async_session_maker() as session:
             # Проверка, что столик существует
