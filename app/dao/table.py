@@ -1,18 +1,20 @@
-from app.dao.base import BaseDAO
 from sqlalchemy import select
-from app.models.table import Table
+
+from app.dao.base import BaseDAO
 from app.database import async_session_maker
 from app.exceptions import TableAlreadyExist
 from app.logger import logger
+from app.models.table import Table
 
 
 class TableDAO(BaseDAO):
     model = Table
 
     @classmethod
-    async def add(cls, name: str, seats: int, location: str = None):
+    async def add(cls, name: str, seats: int, location: str):
         logger.info(
-            f"Попытка добавить новый столик с именем '{name}', местами {seats}, локация: {location or 'не указана'}.")
+            f"Попытка добавить новый столик с именем '{name}', местами {seats}, локация: {location or 'не указана'}."
+        )
 
         async with async_session_maker() as session:
             existing_query = select(cls.model).where(cls.model.name == name)

@@ -1,5 +1,6 @@
-from pydantic import BaseModel
 from typing import Optional
+
+from pydantic import BaseModel, ConfigDict
 
 
 class STable(BaseModel):
@@ -7,14 +8,12 @@ class STable(BaseModel):
     seats: int
     location: Optional[str] = "Не указано"
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(arbitrary_types_allowed=True, from_attributes=True)
 
 
 class STableCreate(STable):
     pass
 
+
 class STableRead(STable):
     id: int
-
-

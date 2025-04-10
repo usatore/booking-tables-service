@@ -1,5 +1,7 @@
 from datetime import datetime
-from pydantic import BaseModel
+
+from pydantic import BaseModel, ConfigDict
+
 from app.schemas.table import STableRead
 
 
@@ -8,8 +10,7 @@ class SReservation(BaseModel):
     reservation_time: datetime
     duration_minutes: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(arbitrary_types_allowed=True, from_attributes=True)
 
 
 class SReservationCreate(SReservation):

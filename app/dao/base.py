@@ -1,8 +1,8 @@
-from sqlalchemy import select, delete, insert
-from app.database import async_session_maker
+from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
-from app.logger import logger
 
+from app.database import async_session_maker
+from app.logger import logger
 
 
 class BaseDAO:
@@ -11,7 +11,9 @@ class BaseDAO:
     @classmethod
     async def find_all(cls, **filter_by):
         try:
-            logger.info(f"Поиск всех записей в {cls.model.__name__} с фильтром: {filter_by}")
+            logger.info(
+                f"Поиск всех записей в {cls.model.__name__} с фильтром: {filter_by}"
+            )
             async with async_session_maker() as session:
                 query = select(cls.model).filter_by(**filter_by)
                 result = await session.execute(query)
@@ -19,7 +21,9 @@ class BaseDAO:
                 logger.info(f"Найдено {len(records)} записей в {cls.model.__name__}.")
                 return records
         except SQLAlchemyError as e:
-            logger.error(f"Ошибка при выполнении запроса в {cls.model.__name__}: {str(e)}")
+            logger.error(
+                f"Ошибка при выполнении запроса в {cls.model.__name__}: {str(e)}"
+            )
             raise
 
     @classmethod
@@ -42,7 +46,9 @@ class BaseDAO:
                 logger.info(f"{cls.model.__name__} с ID {id} был успешно удален.")
                 return {"message": f"Deleted {cls.model.__name__} with id {id}"}
         except SQLAlchemyError as e:
-            logger.error(f"Ошибка при удалении {cls.model.__name__} с ID {id}: {str(e)}")
+            logger.error(
+                f"Ошибка при удалении {cls.model.__name__} с ID {id}: {str(e)}"
+            )
             raise
 
     """

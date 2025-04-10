@@ -1,6 +1,8 @@
 import logging
 from datetime import datetime, timezone
+
 from pythonjsonlogger.json import JsonFormatter
+
 from app.config import settings
 
 logger = logging.getLogger()
@@ -21,7 +23,7 @@ class CustomJsonFormatter(JsonFormatter):
 
 formatter = CustomJsonFormatter(
     "%(timestamp)s \n %(level)s \n %(message)s \n %(module)s \n %(funcName)s",
-    json_ensure_ascii=False
+    json_ensure_ascii=False,
 )
 
 logHandler.setFormatter(formatter)

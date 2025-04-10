@@ -1,12 +1,13 @@
+from datetime import datetime, timedelta
+
 from sqlalchemy import select
-from datetime import timedelta
+
+from app.dao.base import BaseDAO
 from app.database import async_session_maker
-from datetime import datetime
+from app.exceptions import DurationNotPositive, TableAlreadyReserved, TableNotFound
+from app.logger import logger
 from app.models.reservation import Reservation
 from app.models.table import Table
-from app.dao.base import BaseDAO
-from app.exceptions import TableNotFound, TableAlreadyReserved, DurationNotPositive
-from app.logger import logger
 
 
 class ReservationDAO(BaseDAO):
@@ -14,14 +15,15 @@ class ReservationDAO(BaseDAO):
 
     @classmethod
     async def add(
-            cls,
-            customer_name: str,
-            table_id: int,
-            reservation_time: datetime,
-            duration_minutes: int,
+        cls,
+        customer_name: str,
+        table_id: int,
+        reservation_time: datetime,
+        duration_minutes: int,
     ):
         logger.info(
-            f"Попытка добавить новую бронь для клиента '{customer_name}', столик {table_id}, время {reservation_time}.")
+            f"Попытка добавить новую бронь для клиента '{customer_name}', столик {table_id}, время {reservation_time}."
+        )
 
         if duration_minutes <= 0:
             logger.error(f"Некорректная длительность брони: {duration_minutes} минут.")
@@ -49,10 +51,12 @@ class ReservationDAO(BaseDAO):
             for res in existing_reservations:
                 res_end = res.reservation_time + timedelta(minutes=res.duration_minutes)
                 if (
-                        reservation_time < res_end
-                        and reservation_end > res.reservation_time
+                    reservation_time < res_end
+                    and reservation_end > res.reservation_time
                 ):
-                    logger.error(f"Столик {table_id} уже забронирован на время с {res.reservation_time} по {res_end}.")
+                    logger.error(
+                        f"Столик {table_id} уже забронирован на время с {res.reservation_time} по {res_end}."
+                    )
                     raise TableAlreadyReserved
 
             # Если всё ок — добавляем
@@ -66,5 +70,7 @@ class ReservationDAO(BaseDAO):
             session.add(new_reservation)
             await session.commit()
             await session.refresh(new_reservation)
-            logger.info(f"Бронь для клиента '{customer_name}' на столик {table_id} успешно создана.")
+            logger.info(
+                f"Бронь для клиента '{customer_name}' на столик {table_id} успешно создана."
+            )
             return new_reservation

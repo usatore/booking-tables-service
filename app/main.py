@@ -1,8 +1,10 @@
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
-from app.routers.tables import router as router_tables
-from app.routers.reservations import router as router_reservations
+
 from app.logger import logger
+from app.routers.reservations import router as router_reservations
+from app.routers.tables import router as router_tables
 
 
 @asynccontextmanager
